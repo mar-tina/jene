@@ -12,7 +12,7 @@ type Function struct {
 }
 
 // New creates a new function with the passed in param types and returns a ref to that function
-func New(name, retval string, params map[string]interface{}) *Function {
+func NewFunc(name, retval string, params map[string]interface{}) *Function {
 	counter := 0
 	vals := ""
 	for key, value := range params {
