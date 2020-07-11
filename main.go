@@ -7,18 +7,17 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
-	"github.com/gorilla/websocket"
 	internal "github.com/mar-tina/jene/internal"
 	"github.com/mar-tina/jene/service"
 )
 
-var BuildJene internal.JeneInterface
-
 func main() {
-	InstantiateBuilder("trying.go", "trying")
-	BuildJene.DeclarePkg("main")
+	jen := internal.InstantiateBuilder("trying.go", "trying")
+	log.Printf("Jen", jen)
+	jen.DeclarePkg("main")
 	var Oceans = []string{
 		"Arctic",
 		"Southen",
@@ -29,10 +28,10 @@ func main() {
 	var randos = []int{1, 2, 3, 4, 5, 6, 7, 8}
 
 	// Adding imports
-	BuildJene.Use("fmt")
+	jen.Use("fmt")
 
 	// Commiting imports
-	BuildJene.FlushUse()
+	jen.FlushUse()
 
 	// Params. Function input params
 	params := make(map[string]interface{})
@@ -47,24 +46,13 @@ func main() {
 
 	// Statements to be executed
 	f.StateEq("book", "otherbook")
-	f.State(BuildJene.Log("book", "This book is called "), BuildJene.Log("counter", "Your book is called "), "return 0")
-
+	f.State(jen.Log("book", "This book is called "), jen.Log("counter", "Your book is called "), "return 0")
 	// End of the function and Commit writes to file
 	f.End()
-	BuildJene.Commit(f)
-	BuildJene.SliceNewWithContent("oceans", "string", Oceans)
-	BuildJene.SliceNewWithContent("randos", "int", randos)
+	jen.Commit(f)
+	jen.SliceNewWithContent("oceans", "string", Oceans)
+	jen.SliceNewWithContent("randos", "int", randos)
 	NewWebServer("8999")
-}
-
-func InstantiateBuilder(filename string, pkg string) {
-	BuildJene = &internal.JeneBuilder{}
-	BuildJene.Open(filename, pkg)
-}
-
-var upgrader = websocket.Upgrader{
-    ReadBufferSize:  1024,
-    WriteBufferSize: 1024,
 }
 
 func NewWebServer(port string) {

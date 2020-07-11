@@ -29,6 +29,12 @@ type JeneBuilder struct {
 	modules []string
 }
 
+func InstantiateBuilder(filename string, pkg string) *JeneBuilder {
+	jenesais := &JeneBuilder{}
+	jenesais.Open(filename, pkg)
+	return jenesais
+}
+
 func (jene *JeneBuilder) Commit(txn Transactions) error {
 	buf := &bytes.Buffer{}
 	if err := txn.Commit(buf); err != nil {
@@ -148,6 +154,7 @@ func (jene *JeneBuilder) Write(content []byte) error {
 	len, err := jene.f.WriteAt(content, jene.current)
 	if err != nil {
 		log.Printf("Could not write to file %v", err.Error())
+		return err
 	}
 
 	jene.current += int64(len)
