@@ -7,7 +7,9 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	internal "github.com/mar-tina/jene/internal"
 	"github.com/mar-tina/jene/service"
@@ -25,6 +27,13 @@ func main() {
 	}
 	var randos = []int{1, 2, 3, 4, 5, 6, 7, 8}
 
+	var vals = []string{
+		"Arctic : int",
+		"Southen : string",
+		"Indian : int",
+		"Atlantic : string",
+		"Pacific : int",
+	}
 	// Adding imports
 	jen.Use("fmt")
 
@@ -33,8 +42,11 @@ func main() {
 
 	// Params. Function input params
 	params := make(map[string]interface{})
-	params["x"] = "int"
-	params["y"] = "string"
+	for _, arg := range vals {
+		splitString := strings.SplitN(arg, ":", 2)
+		params[fmt.Sprintf("%s", splitString[0])] = splitString[1]
+	}
+
 	f := internal.NewFunc("test", "int", params)
 
 	// Declare function variables
