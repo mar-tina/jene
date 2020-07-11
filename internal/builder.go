@@ -106,11 +106,9 @@ func (jene *JeneBuilder) SliceNewWithContent(label, kind string, content interfa
 	buf := &bytes.Buffer{}
 	templ.Execute(buf, struct {
 		Timestamp time.Time
-		URL       string
 		Values    interface{}
 	}{
 		Timestamp: time.Now(),
-		URL:       "here/home",
 		Values:    content,
 	})
 
