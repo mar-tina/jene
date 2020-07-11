@@ -10,7 +10,7 @@ import (
 )
 
 type JeneInterface interface {
-	Commit(txn Transactions) error
+	Commit(txn Transaction) error
 	Close() error
 	DeclarePkg(name string)
 	FlushUse()
@@ -35,7 +35,7 @@ func InstantiateBuilder(filename string, pkg string) *JeneBuilder {
 	return jenesais
 }
 
-func (jene *JeneBuilder) Commit(txn Transactions) error {
+func (jene *JeneBuilder) Commit(txn Transaction) error {
 	buf := &bytes.Buffer{}
 	if err := txn.Commit(buf); err != nil {
 		return err

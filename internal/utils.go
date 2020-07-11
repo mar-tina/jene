@@ -2,6 +2,6 @@ package internal
 
 import "bytes"
 
-type Transactions interface {
+type Transaction interface {
 	Commit(buf *bytes.Buffer) error
 }
