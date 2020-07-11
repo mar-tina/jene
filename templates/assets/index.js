@@ -30,19 +30,3 @@ document.getElementById("test-box").onclick = () => {
   ];
   makePOSTRequest("/serv", data).then((res) => console.log("RES", res));
 };
-
-// const go = new Go();
-// //   WebAssembly.instantiateStreaming(
-// //     fetch("../serv.wasm"),
-// //     go.importObject
-// //   ).then((result) => {
-// //     go.run(result.instance);
-// //   });
-// async function fetchAndInstantiate() {
-//   const response = await fetch("../serv.wasm");
-//   const buffer = await response.arrayBuffer();
-//   const obj = await WebAssembly.instantiate(buffer, go.importObject);
-//   console.log(go.run(obj.instance)); // "3"
-// }
-
-// fetchAndInstantiate();
