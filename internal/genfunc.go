@@ -55,8 +55,8 @@ func (f *Function) State(args ...interface{}) {
 
 // Commit writes to file
 func (f *Function) Commit(buf *bytes.Buffer) error {
-	f.templ = template.Must(template.New("").Parse(f.parseString))
-	f.templ.Execute(buf, nil)
+	templ := template.Must(template.New("").Parse(f.parseString))
+	templ.Execute(buf, nil)
 	return nil
 }
 
