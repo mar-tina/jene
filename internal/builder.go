@@ -25,7 +25,6 @@ type JeneBuilder struct {
 	f       *os.File
 	pkg     string
 	current int64
-	buf     *bytes.Buffer
 	modules []string
 }
 
