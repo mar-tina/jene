@@ -1,0 +1,48 @@
+export async function makePOSTRequest(url = "", data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    mode: "cors", // no-cors, *cors, same-origin
+    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: "same-origin", // include, *same-origin, omit
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: "follow", // manual, *follow, error
+    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+document.getElementById("test-box").onclick = () => {
+  console.log("clicked");
+  var data = [
+    [
+      "suuupppppppppppp : noooooooooooo : hiiiiiii",
+      "hhiiiiiiish",
+      "sbaiubsaiusaba",
+    ],
+    ["whatttttttttttt : isssssssssss : youuuuuuuuutt"],
+    ["taaaaaaaz", "shshjsjsjjsjs", "shshhshhjaawwewewdced"],
+    ["buddddddd"],
+  ];
+  makePOSTRequest("/serv", data).then((res) => console.log("RES", res));
+};
+
+// const go = new Go();
+// //   WebAssembly.instantiateStreaming(
+// //     fetch("../serv.wasm"),
+// //     go.importObject
+// //   ).then((result) => {
+// //     go.run(result.instance);
+// //   });
+// async function fetchAndInstantiate() {
+//   const response = await fetch("../serv.wasm");
+//   const buffer = await response.arrayBuffer();
+//   const obj = await WebAssembly.instantiate(buffer, go.importObject);
+//   console.log(go.run(obj.instance)); // "3"
+// }
+
+// fetchAndInstantiate();
