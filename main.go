@@ -6,7 +6,15 @@
 // go generate
 package main
 
-var BuildJene JeneInterface
+import (
+	"net/http"
+
+	"github.com/gorilla/websocket"
+	internal "github.com/mar-tina/jene/internal"
+	"github.com/mar-tina/jene/service"
+)
+
+var BuildJene internal.JeneInterface
 
 func main() {
 	InstantiateBuilder("trying.go", "trying")
@@ -30,7 +38,7 @@ func main() {
 	params := make(map[string]interface{})
 	params["x"] = "int"
 	params["y"] = "string"
-	f := NewFunc("test", "int", params)
+	f := internal.NewFunc("test", "int", params)
 
 	// Declare function variables
 	f.Declare("book", "string", "")
@@ -46,10 +54,23 @@ func main() {
 	BuildJene.Commit(f)
 	BuildJene.SliceNewWithContent("oceans", "string", Oceans)
 	BuildJene.SliceNewWithContent("randos", "int", randos)
-
+	NewWebServer("8999")
 }
 
 func InstantiateBuilder(filename string, pkg string) {
-	BuildJene = &JeneBuilder{}
+	BuildJene = &internal.JeneBuilder{}
 	BuildJene.Open(filename, pkg)
+}
+
+var upgrader = websocket.Upgrader{
+    ReadBufferSize:  1024,
+    WriteBufferSize: 1024,
+}
+
+func NewWebServer(port string) {
+	fs := http.FileServer(http.Dir("templates/assets"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/serv", service.HandleHTTPRequests)
+	http.Handle("/", &service.TemplateHandler{Filename: "index.html"})
+	http.ListenAndServe(":"+port, nil)
 }
