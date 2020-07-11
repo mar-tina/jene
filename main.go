@@ -7,7 +7,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	internal "github.com/mar-tina/jene/internal"
@@ -16,7 +15,6 @@ import (
 
 func main() {
 	jen := internal.InstantiateBuilder("trying.go", "trying")
-	log.Printf("Jen", jen)
 	jen.DeclarePkg("main")
 	var Oceans = []string{
 		"Arctic",
@@ -50,6 +48,15 @@ func main() {
 	// End of the function and Commit writes to file
 	f.End()
 	jen.Commit(f)
+
+	//Building a struct
+	rd := make(map[string]interface{})
+	rd["home"] = "string"
+	rd["away"] = "int"
+	sbuilder := &internal.StructBuilder{}
+	sbuilder.DeclareStruct("Fun", rd)
+	jen.Commit(sbuilder)
+
 	jen.SliceNewWithContent("oceans", "string", Oceans)
 	jen.SliceNewWithContent("randos", "int", randos)
 	NewWebServer("8999")
