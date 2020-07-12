@@ -31,7 +31,12 @@ type JeneBuilder struct {
 func InstantiateBuilder(filename string, pkg string) *JeneBuilder {
 	jenesais := &JeneBuilder{}
 	jenesais.Open(filename, pkg)
+	jenesais.DeclarePkg(pkg)
 	return jenesais
+}
+
+func InitBuilder(params []string) *JeneBuilder {
+	return InstantiateBuilder(params[1], params[2])
 }
 
 func (jene *JeneBuilder) Commit(txn Transaction) error {
@@ -68,7 +73,6 @@ func (jene *JeneBuilder) Log(param, info string) string {
 
 func (jene *JeneBuilder) Open(filename string, pkg string) error {
 	var err error
-
 	// Before creating file. Check if file already exists . If file does not exist create file set the package name.
 	_, err = os.Stat(filename)
 	if os.IsNotExist(err) {
@@ -81,6 +85,7 @@ func (jene *JeneBuilder) Open(filename string, pkg string) error {
 		return err
 	}
 
+	defer jene.f.Close()
 	return nil
 }
 
@@ -155,6 +160,5 @@ func (jene *JeneBuilder) Write(content []byte) error {
 	}
 
 	jene.current += int64(len)
-	log.Printf("Wrote %v bytes to file", len)
 	return nil
 }
