@@ -8,6 +8,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -88,6 +89,7 @@ func main() {
 
 	jen.SliceNewWithContent("oceans", "string", Oceans)
 	jen.SliceNewWithContent("randos", "int", randos)
+	log.Printf("RUNNING ON PORT %v", 8999)
 	NewWebServer("8999")
 }
 
