@@ -67,9 +67,14 @@ func main() {
 	fparams.Set("fourth", "sea")
 	fparams.Set("fifth", 4)
 	f.Call("test", fparams)
+
+	test := []string{"hiiiii"}
+	f.RCall("test", test, fparams, false)
 	// Statements to be executed
 	f.StateEq("book", "otherbook")
+	f.State(jen.Log("hiiiii", "Well hello there"))
 	f.State(jen.Log("book", "This book is called "), jen.Log("counter", "Your book is called "), jen.Log("bike", "This is a bike "), "return 0")
+
 	// End of the function and Commit writes to file
 	f.End()
 	jen.Commit(f)
