@@ -15,6 +15,7 @@ type Function struct {
 	declared    []string
 	tabDepth    int
 	block       bool
+	prev        *Function
 }
 
 // New creates a new function with the passed in param types and returns a ref to that function
@@ -49,14 +50,23 @@ func (f *Function) Declare(name, kind string, value interface{}) {
 		if f.tabDepth < 1 {
 			f.tabDepth++
 		}
-		f.parseString += fmt.Sprintf("\tvar %s %s \n", name, kind)
+		f.parseString += "\t"
+		f.parseString += fmt.Sprintf(`var %s %v \n`, name, kind)
 	} else {
 		if f.tabDepth < 1 {
 			f.tabDepth++
 		}
-		f.parseString += "\t"
-		f.parseString += fmt.Sprintf(`%s := "%s"`, name, value)
-		f.parseString += "\n"
+		// current decl only checks for int and string values
+		if _, ok := value.(int); ok {
+			f.parseString += "\t"
+			f.parseString += fmt.Sprintf(`%s := %v`, name, value)
+			f.parseString += "\n"
+		} else {
+			f.parseString += "\t"
+			f.parseString += fmt.Sprintf(`%s := "%s"`, name, value)
+			f.parseString += "\n"
+		}
+
 	}
 
 }
