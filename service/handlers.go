@@ -33,15 +33,12 @@ func HandleHTTPRequests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ast := [][]string{}
-	err = json.Unmarshal(dat, &ast)
-	if err != nil {
-		HandleFailed(w, err, "Failed to parse payload. Check your payload for improper inputs")
-		return
-	}
+	payload := make(map[string][]string)
+	json.Unmarshal(dat, &payload)
 
-	internal.BuildFile(ast)
-
+	stack := &internal.Stack{}
+	stack.InitStack(payload["instructions"])
+	stack.ExecuteInstructions()
 	w.Write(dat)
 }
 
