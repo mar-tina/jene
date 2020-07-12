@@ -18,15 +18,16 @@ export async function makePOSTRequest(url = "", data = {}) {
 
 document.getElementById("test-box").onclick = () => {
   console.log("clicked");
-  var data = [
-    [
-      "suuupppppppppppp : noooooooooooo : hiiiiiii",
-      "hhiiiiiiish",
-      "sbaiubsaiusaba",
+  var data = {
+    instructions: [
+      "pkg:home.go:main",
+      "f-start:sayHi:string:name,string salutation,string",
+      "declare:email:int:i*1",
+      "f-end",
+      "f-start:sayBye:string:name,string salutation,string",
+      "declare:friend:string:longtimefriend",
+      "f-end",
     ],
-    ["whatttttttttttt : isssssssssss : youuuuuuuuutt"],
-    ["taaaaaaaz", "shshjsjsjjsjs", "shshhshhjaawwewewdced"],
-    ["buddddddd"],
-  ];
+  };
   makePOSTRequest("/serv", data).then((res) => console.log("RES", res));
 };
