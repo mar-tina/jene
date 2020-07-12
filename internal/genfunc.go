@@ -144,6 +144,20 @@ func (f *Function) Call(idx string, params *orderedmap.OrderedMap) {
 }
 
 //Rcall calls the function that has a return value
-// func (f *Function) RCall(idx string, retvals interface{}, params interface{}) {
+func (f *Function) RCall(idx string, retvals []string, params *orderedmap.OrderedMap, defined bool) {
+	parsedParams := parseParams(params)
+	ret := ""
+	sep := ","
+	for i, arg := range retvals {
+		if i == len(retvals)-1 {
+			sep = ""
+		}
+		ret += arg + sep
+	}
 
-// }
+	if !defined {
+		sep = ":"
+	}
+	parseString := fmt.Sprintf(`%v %s= %s(%v)`, ret, sep, idx, parsedParams)
+	f.State(parseString)
+}
