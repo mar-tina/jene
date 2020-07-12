@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/elliotchance/orderedmap"
 	internal "github.com/mar-tina/jene/internal"
 	"github.com/mar-tina/jene/service"
 )
@@ -28,35 +29,47 @@ func main() {
 	var randos = []int{1, 2, 3, 4, 5, 6, 7, 8}
 
 	var vals = []string{
-		"Arctic : int",
-		"Southen : string",
-		"Indian : int",
-		"Atlantic : string",
-		"Pacific : int",
+		"Arctic,int",
+		"Southen,string",
+		"Indian,int",
+		"Atlantic,string",
+		"Pacific,int",
 	}
 	// Adding imports
 	jen.Use("fmt")
-
+	jen.Use("strings")
 	// Commiting imports
 	jen.FlushUse()
 
 	// Params. Function input params
-	params := make(map[string]interface{})
+	params := orderedmap.NewOrderedMap()
 	for _, arg := range vals {
-		splitString := strings.SplitN(arg, ":", 2)
-		params[fmt.Sprintf("%s", splitString[0])] = splitString[1]
+		splitString := strings.SplitN(arg, ",", 2)
+		params.Set(fmt.Sprintf("%s", splitString[0]), splitString[1])
 	}
-
 	f := internal.NewFunc("test", "int", params)
 
 	// Declare function variables
 	f.Declare("book", "string", "")
 	f.Declare("otherbook", "string", "Dirty Code")
 	f.Declare("counter", "int", "")
+	f.StateEq("bike", "Pacific")
 
+	//Loop Range
+	f.LRange("_", "arg", `strings.Split(otherbook, " ")`)
+	f.State(jen.Log("arg", "This is not fun"))
+	f.EndLRange()
+
+	fparams := orderedmap.NewOrderedMap()
+	fparams.Set("first", 1)
+	fparams.Set("second", "see")
+	fparams.Set("third", 2)
+	fparams.Set("fourth", "sea")
+	fparams.Set("fifth", 4)
+	f.Call("test", fparams)
 	// Statements to be executed
 	f.StateEq("book", "otherbook")
-	f.State(jen.Log("book", "This book is called "), jen.Log("counter", "Your book is called "), "return 0")
+	f.State(jen.Log("book", "This book is called "), jen.Log("counter", "Your book is called "), jen.Log("bike", "This is a bike "), "return 0")
 	// End of the function and Commit writes to file
 	f.End()
 	jen.Commit(f)
