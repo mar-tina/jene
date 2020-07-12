@@ -50,8 +50,7 @@ func (f *Function) Declare(name, kind string, value interface{}) {
 		if f.tabDepth < 1 {
 			f.tabDepth++
 		}
-		f.parseString += "\t"
-		f.parseString += fmt.Sprintf(`var %s %v \n`, name, kind)
+		f.parseString += fmt.Sprintf("\tvar %s %v \n", name, kind)
 	} else {
 		if f.tabDepth < 1 {
 			f.tabDepth++
