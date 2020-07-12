@@ -17,8 +17,7 @@ import (
 )
 
 func main() {
-	jen := internal.InstantiateBuilder("trying.go", "trying")
-	jen.DeclarePkg("main")
+	jen := internal.InstantiateBuilder("trying.go", "main")
 	var Oceans = []string{
 		"Arctic",
 		"Southen",
@@ -52,7 +51,7 @@ func main() {
 	// Declare function variables
 	f.Declare("book", "string", "")
 	f.Declare("otherbook", "string", "Dirty Code")
-	f.Declare("counter", "int", "")
+	f.Declare("counter", "int", 1)
 	f.StateEq("bike", "Pacific")
 
 	//Loop Range
