@@ -78,11 +78,9 @@ func parseVar(input string) interface{} {
 	var ret interface{}
 	sp := strings.Split(input, "*")
 	if len(sp) <= 1 {
-		log.Printf("Here %v", input)
 		return input
 	}
 
-	log.Printf("SP %v %v", sp[0], sp[1])
 	switch sp[0] {
 	case "i":
 		log.Printf("Inside int")
