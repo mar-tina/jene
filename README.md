@@ -55,6 +55,7 @@ an endpoint and receive a file with the codified response.
 ```go
 
     func main() {
+
         jen := internal.InstantiateBuilder("trying.go", "main")
 
 	    jen.Use("fmt")
@@ -119,7 +120,7 @@ Loop Range can only be declared inside of a function
 ```go
 
     //Loop Range
-    fn main() {
+    func main() {
         f.Declare("book", "string", "Split me into little pieces")
 	    f.LRange("_", "arg", `strings.Split(otherbook, " ")`)
         f.State(jen.Log("arg", "This is not fun"))
@@ -130,10 +131,13 @@ Loop Range can only be declared inside of a function
 
 ```go
 
-    otherbook := "Split me into threee"
-    for _, arg := range strings.Split(otherbook, " ") {
-		fmt.Printf("This is not fun %v",arg)
+    func main() {
+        otherbook := "Split me into threee"
+        for _, arg := range strings.Split(otherbook, " ") {
+            fmt.Printf("This is not fun %v",arg)
+        }
     }
+
 
 ```
 
@@ -142,12 +146,14 @@ Loop Range can only be declared inside of a function
 ```go
 
     //Building a struct
-	rd := make(map[string]interface{})
-	rd["home"] = "string"
-	rd["away"] = "int"
-	sbuilder := &internal.StructBuilder{}
-	sbuilder.DeclareStruct("Fun", rd)
-    jen.Commit(sbuilder)
+    func main() {
+        rd := make(map[string]interface{})
+        rd["home"] = "string"
+        rd["away"] = "int"
+        sbuilder := &internal.StructBuilder{}
+        sbuilder.DeclareStruct("Fun", rd)
+        jen.Commit(sbuilder)
+    }
 
 ```
 
