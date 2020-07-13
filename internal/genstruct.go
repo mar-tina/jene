@@ -11,6 +11,8 @@ type StructBuilder struct {
 	parseString string
 }
 
+
+
 func (sb *StructBuilder) DeclareStruct(label string, fields map[string]interface{}) {
 	sb.parseString = "type " + label + " struct {\n"
 	val := reflect.ValueOf(fields)

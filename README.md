@@ -65,7 +65,7 @@ func main() {
 		"Southen,string",
 		"Indian,int",
 		"Atlantic,string",
-		"Pacific,int",
+		"Pacific,int"
 	}
 
 	// Params. Function input params
