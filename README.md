@@ -52,12 +52,21 @@ an endpoint and receive a file with the codified response.
 
 ```go
 func main() {
+
     jen := internal.InstantiateBuilder("trying.go", "main")
 	// Adding imports
 	jen.Use("fmt")
 	jen.Use("strings")
 	// Commiting imports
-	jen.FlushUse()
+    jen.FlushUse()
+
+    var vals = []string{
+		"Arctic,int",
+		"Southen,string",
+		"Indian,int",
+		"Atlantic,string",
+		"Pacific,int",
+	}
 
 	// Params. Function input params
 	params := orderedmap.NewOrderedMap()
@@ -67,7 +76,7 @@ func main() {
 	}
 	f := internal.NewFunc("test", "int", params)
 
-	// Declare function variables
+	// Declare function scope variables
 	f.Declare("book", "string", "")
 	f.Declare("otherbook", "string", "Dirty Code")
 
