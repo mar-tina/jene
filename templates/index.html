@@ -4,15 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
-    <style>
-      #test-box {
-        padding: 20px;
-        border: 2px black solid;
-      }
-    </style>
+    <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
-    <div id="test-box">Run func generation</div>
-    <script type="module" src="/static/index.js"></script>
+    <div id="header">
+      JENE .
+    </div>
+    <div id="content">
+      <div id="module-holder">
+        Modules
+        <div id="func" uniqid="func" class="module" draggable="true">
+          Function
+        </div>
+        <div id="string" uniqid="string" class="module" draggable="true">
+          String
+        </div>
+      </div>
+      <div id="playground">
+        Playground
+      </div>
+      <div id="variables">Variables</div>
+    </div>
+
+    <script type="module" src="./assets/index.js"></script>
+    <script type="module" src="./assets/vars.js"></script>
   </body>
 </html>
