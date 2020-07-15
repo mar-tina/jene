@@ -1,21 +1,45 @@
-import { Shadow } from "../shadow.js";
+import { Shadow, useState } from "../shadow.js";
+import { createObjectOnCondition, addStmtToFunctionObject } from "../utils.js";
+import { globalProvider, subToComponents } from "../provider.js";
 
-let show = false;
+let state = {
+  components: [],
+};
 
 export let Play = Shadow("play-el", {
+  getInitialState: (self) => {
+    return useState(state, self);
+  },
   onMount: (self) => {
-    console.log("Play is here", self);
+    subToComponents(self);
   },
 
   methods: {
     handleDrop: function (e, self) {
       e.preventDefault();
-      console.log("Drop it");
+      self.state.components.push(
+        createObjectOnCondition(e.dataTransfer.getData("module"))
+      );
+      globalProvider.providers.globalCtx.proxyObject.components =
+        self.state.components;
+      console.log("Drop it", self.state, globalProvider.providers);
     },
 
     handleDragover: function (e, self) {
       e.preventDefault();
       console.log("Over");
+    },
+
+    handleDropOnFunc: function (e, self) {
+      e.preventDefault();
+      e.stopPropagation();
+      let obj = createObjectOnCondition(e.dataTransfer.getData("module"));
+      console.log("Dropped in func", obj, "Targe", e.target.id);
+      addStmtToFunctionObject(e.target.id, self.state.components, obj);
+      // update ctx provider to trigger page refresh
+      globalProvider.providers.globalCtx.proxyObject.components =
+        self.state.components;
+      console.log(self);
     },
 
     handleDragStart: function (e, self) {
@@ -27,28 +51,77 @@ export let Play = Shadow("play-el", {
   template: (self) => /*html*/ `
         <style>
             .container{
-                height: 100vh;
-                background-color: #DCDCDC;
+                min-height: 80vh;
+                border-top: 4px solid black;
+                border-left: 4px solid black;
+                border-right: 4px solid black;
+                border-bottom: 4px solid black;
+                border-radius: 3px;
+                padding: 20px;
+            }
+            .func {
+              border-left: 3px lightskyblue solid;
+              padding: 10px;
+              min-height: 150px;
+              font-family: "Courier New", Courier, monospace;
+              margin-top: 15px;
+              margin-bottom: 15px;
+              font-weight: 600;
+            }
+
+            .stmt {
+              border-left: 3px lightgreen solid;
+              padding: 10px;
+              min-height: 30px;
+              font-family: "Courier New", Courier, monospace;
+              margin-top: 15px;
+              margin-bottom: 15px;
+              font-weight: 600;
+            }
+
+            .loop {
+              border-left: 3px yellow solid;
+              padding: 10px;
+              min-height: 30px;
+              font-family: "Courier New", Courier, monospace;
+              margin-top: 15px;
+              margin-bottom: 15px;
+              font-weight: 600;
             }
         </style>
         <div @dragover="handleDragover" @dragenter="handleDragStart" @drop="handleDrop" class="container"> 
-           <div >
-            shdbhsbdsdh
-            </div>
-
-            ${emptyDropZone(show)}
+            ${componentList(self)}
         </div>
     `,
 });
 
-let emptyDropZone = (zone) => {
-  if (zone) {
-    return `
-            DROPPPPPXXXXXOOOOOOONNNNNEEEE
-        `;
-  } else {
-    return `
-            herrreeeeee
-        `;
+let componentList = (ctx) => {
+  return `${
+    ctx.state.components &&
+    ctx.state.components
+      .map((x) => {
+        if (x.getTypeOf() == "func") {
+          return `<div id=${
+            x.id
+          } class="${x.getTypeOf()}" @drop="handleDropOnFunc" draggable="true">
+            ${x.id}${ctx.state.components.length}${x.name}
+            ${
+              x.declarations &&
+              x.declarations
+                .map((x) => {
+                  return `<div class="${x.getTypeOf()}"> ${x.id} </div>`;
+                })
+                .join("")
+            }
+
+          </div>`;
+        } else {
+          return `<div id=${x.id} class="${x.getTypeOf()}" draggable="true">
+            ${x.id}${ctx.state.components.length}
+          </div>`;
+        }
+      })
+      .join("")
   }
+  `;
 };
