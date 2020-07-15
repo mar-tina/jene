@@ -9,15 +9,18 @@ export let Play = Shadow("play-el", {
 
   methods: {
     handleDrop: function (e, self) {
-      console.log("hshshshsh");
+      e.preventDefault();
+      console.log("Drop it");
     },
 
     handleDragover: function (e, self) {
-      console.log("overr");
+      e.preventDefault();
+      console.log("Over");
     },
 
     handleDragStart: function (e, self) {
-      console.log("sjdjsd");
+      e.preventDefault();
+      console.log("Drag start", e);
     },
   },
 
@@ -28,7 +31,7 @@ export let Play = Shadow("play-el", {
                 background-color: #DCDCDC;
             }
         </style>
-        <div @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragStart" class="container"> 
+        <div @dragover="handleDragover" @dragenter="handleDragStart" @drop="handleDrop" class="container"> 
            <div >
             shdbhsbdsdh
             </div>
