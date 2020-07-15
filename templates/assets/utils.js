@@ -17,6 +17,7 @@
 // }
 
 import { FuncObject, DeclarationObject, LoopObject } from "./definition.js";
+import { globalProvider } from "./provider.js";
 
 // document.getElementById("func").onclick = () => {
 //   console.log("clicked");
@@ -74,9 +75,32 @@ export let createObjectOnCondition = (cond) => {
 export let addStmtToFunctionObject = (id, items, stmt) => {
   for (var i in items) {
     if (items[i].id == id) {
-      items[i].declarations.push(stmt);
+      items[i].declarations.push(Array.isArray(stmt) ? stmt[0] : stmt);
       break; //Stop this loop, we found it!
     }
     console.log("Item", items[i].id);
   }
+};
+
+export let addLoopToFunctionObject = (id, items, loop) => {
+  for (var i in items) {
+    if (items[i].id == id) {
+      items[i].declarations.push(loop);
+      break; //Stop this loop, we found it!
+    }
+    console.log("Item", items[i].id);
+  }
+};
+
+export let checkIfAlreadyExists = (id) => {
+  let component;
+  let items = globalProvider.providers.globalCtx.proxyObject.components;
+  for (var i in items) {
+    if (items[i].id == id) {
+      component = items.splice(i, 1);
+      break; //Stop this loop, we found it!
+    }
+    console.log("Item", items[i].id);
+  }
+  return component;
 };
