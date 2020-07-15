@@ -16,6 +16,8 @@
 //   return response.json(); // parses JSON response into native JavaScript objects
 // }
 
+import { FuncObject, DeclarationObject, LoopObject } from "./definition.js";
+
 // document.getElementById("func").onclick = () => {
 //   console.log("clicked");
 //   var data = {
@@ -44,3 +46,37 @@ export function sanitize(string) {
   const reg = /[&<>"'/]/gi;
   return string.replace(reg, (match) => map[match]);
 }
+
+export function getRandom(size) {
+  return Math.random()
+    .toString(36)
+    .replace(/[^a-z]+/g, "")
+    .substr(0, size);
+}
+
+export let createObjectOnCondition = (cond) => {
+  let ret;
+  switch (cond) {
+    case "func":
+      ret = new FuncObject(getRandom(6));
+      break;
+    case "stmt":
+      ret = new DeclarationObject(getRandom(6));
+      break;
+    case "loop":
+      ret = new LoopObject(getRandom(6));
+      break;
+  }
+
+  return ret;
+};
+
+export let addStmtToFunctionObject = (id, items, stmt) => {
+  for (var i in items) {
+    if (items[i].id == id) {
+      items[i].declarations.push(stmt);
+      break; //Stop this loop, we found it!
+    }
+    console.log("Item", items[i].id);
+  }
+};
