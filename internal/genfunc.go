@@ -23,16 +23,17 @@ func NewFunc(name, retval string, params *orderedmap.OrderedMap) *Function {
 	counter := 0
 	vals := ""
 	sep := ","
+	f := &Function{}
 	for el := params.Front(); el != nil; el = el.Next() {
 		if counter == params.Len()-1 {
 			sep = ""
 		}
+		f.declared = append(f.declared, el.Key.(string))
 		vals += fmt.Sprintf("%s %v%s", el.Key, el.Value, sep)
 
 		counter++
 	}
 
-	f := &Function{}
 	f.parseString = fmt.Sprintf("func %v(%v) %v {\n", name, vals, retval)
 
 	return f
@@ -73,10 +74,10 @@ func (f *Function) Declare(name, kind string, value interface{}) {
 // State are the statements to be executed within function
 func (f *Function) State(args ...interface{}) {
 	tab := fmt.Sprintf(strings.Repeat("\t", f.tabDepth))
-
 	for _, arg := range args {
 		if f.tabDepth < 1 {
 			f.tabDepth++
+			tab = fmt.Sprintf(strings.Repeat("\t", f.tabDepth))
 		}
 		f.parseString += fmt.Sprintf("%v%v \n", tab, arg)
 	}
@@ -92,6 +93,7 @@ func (f *Function) Commit(buf *bytes.Buffer) error {
 // StateEq sets to variables equal to each other
 func (f *Function) StateEq(a, b string) {
 	var exists bool
+
 	for _, arg := range f.declared {
 		if arg == a {
 			st := fmt.Sprintf("%v = %v", a, b)
