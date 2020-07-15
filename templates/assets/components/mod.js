@@ -2,15 +2,18 @@ import { Shadow, useState } from "../shadow.js";
 
 var modules = {
   func: {
-    name: "func",
+    name: "Func",
+    type: "func",
   },
 
   str: {
-    name: "string",
+    name: "Statement",
+    type: "stmt",
   },
 
   intr: {
-    name: "int",
+    name: "Loop",
+    type: "loop",
   },
 };
 
@@ -24,6 +27,10 @@ export let Mod = Shadow("mod-el", {
   methods: {
     handleDrop: (e, self) => {
       console.log("DROPPP", e, self.getRootNode().host);
+    },
+
+    handleDragStart: (e, self) => {
+      e.dataTransfer.setData("module", e.target.id);
     },
   },
 
@@ -46,7 +53,9 @@ export let Mod = Shadow("mod-el", {
 let modList = (ctx) => {
   return `${Object.entries(ctx.state)
     .map(
-      (x) => `<div class="mod" draggable="true">
+      (
+        x
+      ) => `<div id="${x[1].type}" class="mod" @dragstart="handleDragStart" draggable="true">
         ${x[1].name}
     </div>
   `

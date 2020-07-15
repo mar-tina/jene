@@ -18,6 +18,7 @@ export function Shadow(label, args, styleObject) {
       }
       constructor() {
         super();
+        this.state = args.state;
         this.VDomNodes = {};
         this.BindNodes = {};
         this._shadowRoot = this.attachShadow({
