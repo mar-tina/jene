@@ -57,11 +57,10 @@ an endpoint and receive a file with the codified response.
     func main() {
 
         jen := internal.InstantiateBuilder("trying.go", "main")
-
-	    jen.Use("fmt")
-	    jen.Use("strings")
-	    // Commiting imports
-	    jen.FlushUse()
+	jen.Use("fmt")
+	jen.Use("strings")
+	// Commiting imports
+	jen.FlushUse()
     }
 
 ```
@@ -122,7 +121,7 @@ Loop Range can only be declared inside of a function
     //Loop Range
     func main() {
         f.Declare("book", "string", "Split me into little pieces")
-	    f.LRange("_", "arg", `strings.Split(otherbook, " ")`)
+	f.LRange("_", "arg", `strings.Split(otherbook, " ")`)
         f.State(jen.Log("arg", "This is not fun"))
         f.EndLRange()
     }
