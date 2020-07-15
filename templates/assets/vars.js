@@ -1,7 +1,8 @@
-export function showVariables(items) {
-  var arrayVariable = ["one", "two", "three"];
-  var arrayLength = arrayVariable.length;
+export function showVariables(items, retval) {
   var temp;
+  var varscontainer = document.getElementById("variables");
+  varscontainer.innerHTML = "";
+  varscontainer.innerHTML = "Variables";
 
   for (var i = 0; i < items.length; i++) {
     temp = document.createElement("div");
@@ -10,4 +11,8 @@ export function showVariables(items) {
     temp.innerHTML = items[i].replace(",", " : ");
     document.getElementById("variables").appendChild(temp);
   }
+
+  var retDiv = document.createElement("div");
+  retDiv.innerHTML = "Return : " + retval;
+  document.getElementById("variables").appendChild(retDiv);
 }

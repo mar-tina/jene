@@ -28,16 +28,29 @@ export function createObjectOnCondition(cond, idx, parent) {
     case "string":
       console.log("A VARIABLE");
       createVarDef(parent, idx);
+      break;
+    case "int":
+      console.log("AN INTEGER");
+      createVarDef(parent, idx);
+      break;
+    case "statement":
+      console.log("A Statement");
+      createVarDef(parent, idx);
+      break;
   }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   // Get the element by id
   const element = document.getElementById("func");
-  const elvars = document.getElementById("string");
+  const elstring = document.getElementById("string");
+  const elint = document.getElementById("int");
+  const elstatement = document.getElementById("statement");
   // Add the ondragstart event listener
   element.addEventListener("dragstart", dragstart_handler);
-  elvars.addEventListener("dragstart", dragstart_handler);
+  elstring.addEventListener("dragstart", dragstart_handler);
+  elint.addEventListener("dragstart", dragstart_handler);
+  elstatement.addEventListener("dragstart", dragstart_handler);
 
   const container = document.getElementById("playground");
   container.addEventListener("drop", (e) => {

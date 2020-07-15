@@ -20,6 +20,7 @@ export let FuncObject = function (id) {
 
 FuncObject.prototype.addParams = function (param) {
   this.params.push(param);
+  console.log("PARAMAS", this.params);
 };
 
 FuncObject.prototype.getAll = function () {
@@ -32,6 +33,14 @@ FuncObject.prototype.getType = function () {
 
 FuncObject.prototype.setName = function (name) {
   this.name = name;
+};
+
+FuncObject.prototype.getReturnValue = function () {
+  return this.retval;
+};
+
+FuncObject.prototype.setReturnValue = function (ret) {
+  this.retval = ret;
 };
 
 export let DeclarationObject = function () {
