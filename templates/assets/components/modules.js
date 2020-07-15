@@ -34,10 +34,13 @@ export let Modules = Shadow("modules-el", {
         border-radius: 4px;
         border-width: 3px;
       }
+      input {
+        font-family: "Courier New", Courier, monospace;
+        font-weight: 600;
+      }
     </style>
     <div class="container">
         <div>
-            <div @bind="name"> ${self.state.name} </div>
             <input class="iname" @input="handleInput" /> 
         </div>
         <div> 

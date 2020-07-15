@@ -21,14 +21,23 @@ export let Mod = Shadow("mod-el", {
     return useState(modules, self);
   },
 
-  methods: (self) => {
-    handleDrag = (e) => {
-      console.log("DRRRRAAAAAGGGG");
-    };
+  methods: {
+    handleDrop: (e, self) => {
+      console.log("DROPPP", e, self.getRootNode().host);
+    },
   },
 
   template: (self) => {
     return `
+        <style>
+          .mod {
+            padding: 10px;
+            border-left: 3px solid lightskyblue;
+            margin: 10px;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: 600;
+          }
+        </style>
         ${modList(self)}
     `;
   },
@@ -37,7 +46,7 @@ export let Mod = Shadow("mod-el", {
 let modList = (ctx) => {
   return `${Object.entries(ctx.state)
     .map(
-      (x) => `<div draggable="true">
+      (x) => `<div class="mod" draggable="true">
         ${x[1].name}
     </div>
   `
