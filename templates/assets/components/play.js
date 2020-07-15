@@ -1,6 +1,11 @@
 import { Shadow, useState } from "../shadow.js";
-import { createObjectOnCondition, addStmtToFunctionObject } from "../utils.js";
+import { createObjectOnCondition } from "../utils.js";
 import { globalProvider, subToComponents } from "../provider.js";
+import {
+  handleDragStartLoop,
+  handleDragStartStmt,
+  handleDropOnFunc,
+} from "./shared.js";
 
 let state = {
   components: [],
@@ -17,9 +22,8 @@ export let Play = Shadow("play-el", {
   methods: {
     handleDrop: function (e, self) {
       e.preventDefault();
-      self.state.components.push(
-        createObjectOnCondition(e.dataTransfer.getData("module"))
-      );
+      let data = JSON.parse(e.dataTransfer.getData("module"));
+      self.state.components.push(createObjectOnCondition(data.name));
       globalProvider.providers.globalCtx.proxyObject.components =
         self.state.components;
       console.log("Drop it", self.state, globalProvider.providers);
@@ -30,17 +34,11 @@ export let Play = Shadow("play-el", {
       console.log("Over");
     },
 
-    handleDropOnFunc: function (e, self) {
-      e.preventDefault();
-      e.stopPropagation();
-      let obj = createObjectOnCondition(e.dataTransfer.getData("module"));
-      console.log("Dropped in func", obj, "Targe", e.target.id);
-      addStmtToFunctionObject(e.target.id, self.state.components, obj);
-      // update ctx provider to trigger page refresh
-      globalProvider.providers.globalCtx.proxyObject.components =
-        self.state.components;
-      console.log(self);
-    },
+    loopDragStart: handleDragStartLoop,
+
+    stmtDragStart: handleDragStartStmt,
+
+    handleDropOnFunc,
 
     handleDragStart: function (e, self) {
       e.preventDefault();
@@ -77,6 +75,7 @@ export let Play = Shadow("play-el", {
               margin-top: 15px;
               margin-bottom: 15px;
               font-weight: 600;
+              background-color: lightgreen;
             }
 
             .loop {
@@ -87,6 +86,7 @@ export let Play = Shadow("play-el", {
               margin-top: 15px;
               margin-bottom: 15px;
               font-weight: 600;
+              background-color: yellow;
             }
         </style>
         <div @dragover="handleDragover" @dragenter="handleDragStart" @drop="handleDrop" class="container"> 
@@ -103,20 +103,26 @@ let componentList = (ctx) => {
         if (x.getTypeOf() == "func") {
           return `<div id=${
             x.id
-          } class="${x.getTypeOf()}" @drop="handleDropOnFunc" draggable="true">
+          } class="${x.getTypeOf()}" @drop="handleDropOnFunc" @click="hi" draggable="true">
             ${x.id}${ctx.state.components.length}${x.name}
             ${
               x.declarations &&
               x.declarations
                 .map((x) => {
-                  return `<div class="${x.getTypeOf()}"> ${x.id} </div>`;
+                  return `<div class="${
+                    Array.isArray(x) ? x[0].getTypeOf() : x.getTypeOf()
+                  }"> ${x.id} </div>`;
                 })
                 .join("")
             }
 
           </div>`;
         } else {
-          return `<div id=${x.id} class="${x.getTypeOf()}" draggable="true">
+          return `<div id=${
+            x.id
+          } class="${x.getTypeOf()}" draggable="true" @dragstart="${
+            x.getTypeOf() == `loop` ? `loopDragStart` : `stmtDragStart`
+          }"  >
             ${x.id}${ctx.state.components.length}
           </div>`;
         }
