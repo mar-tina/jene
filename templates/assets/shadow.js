@@ -53,9 +53,7 @@ export function Shadow(label, args, styleObject) {
               for (var prop in attr) {
                 if (attr[prop].nodeName != null) {
                   if (attr[prop].nodeName.startsWith("@")) {
-                    console.log("HERRRR");
                     let f = args.methods[`${attr[prop].nodeValue}`];
-                    console.log("Methods", attr[prop].nodeName, f);
                     attr[prop].nodeName === "@bind"
                       ? setBindNodes(el, attr[prop].nodeValue, this.BindNodes)
                       : el.addEventListener(
