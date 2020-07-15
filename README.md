@@ -13,6 +13,11 @@ go run main.go
 
 ### Example Usage
 
+    Hit the below endpoint with the provided payload . By default serving port : 8999
+
+    {BASEURL}/serv
+
+
 ```json
 {
   "instructions": [
