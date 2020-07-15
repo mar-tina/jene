@@ -2,27 +2,26 @@ import { ContextProvider } from "./shadow.js";
 
 export let globalProvider = new ContextProvider();
 
-export let pubTodoCtx = (self) => {
+export let pubglobalCtx = (self) => {
   let props = {
     todos: [],
+    components: [],
   };
-  return globalProvider.addNewContext("todoCtx", props);
+  return globalProvider.addNewContext("globalCtx", props);
 };
 
-export let subToTodos = (self) => {
+export let subToComponents = (self) => {
   let callback = {
     listenOn: "set",
     f: (property, args) => {
-      if (property === "todos") {
-        self.setState({
-          todos: args,
-        });
+      if ((property = "components")) {
+        self.setState({ components: args }, true);
       }
     },
   };
   try {
-    return globalProvider.subToContext("todoCtx", callback);
+    return globalProvider.subToContext("globalCtx", callback);
   } catch (error) {
-    console.log("Failed", error);
+    console.log("Failed to sub to globalCtx", error);
   }
 };
