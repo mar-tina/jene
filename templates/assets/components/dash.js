@@ -1,12 +1,20 @@
 import { Shadow, useState } from "../shadow.js";
-import { subToTodos } from "../provider.js";
+import { subToComponents } from "../provider.js";
 
 import "./modules.js";
 import "./play.js";
 
+let state = {
+  components: [],
+};
+
 export let Dash = Shadow("dash-el", {
   onMount: (self) => {
-    subToTodos(self);
+    subToComponents(self);
+  },
+
+  getInitialState: (self) => {
+    return useState(state, self);
   },
 
   template: (self) => /*html*/ `
@@ -23,7 +31,7 @@ export let Dash = Shadow("dash-el", {
         <modules-el></modules-el>
       </div>
       <div> <play-el></play-el> </div>
-      <div> C </div>
+      <div>  </div>
     </div>
   `,
 });
