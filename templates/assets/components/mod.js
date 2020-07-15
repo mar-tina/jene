@@ -1,4 +1,5 @@
 import { Shadow, useState } from "../shadow.js";
+import { handleDragStartStmt, handleDragStartLoop } from "./shared.js";
 
 var modules = {
   func: {
@@ -30,8 +31,16 @@ export let Mod = Shadow("mod-el", {
     },
 
     handleDragStart: (e, self) => {
-      e.dataTransfer.setData("module", e.target.id);
+      var item = {
+        name: "func",
+        id: e.target.id,
+      };
+      e.dataTransfer.setData("module", JSON.stringify(item));
+      console.log("is a drag", e.target.id);
     },
+
+    handleDragStartStmt: handleDragStartStmt,
+    handleDragStartLoop: handleDragStartLoop,
   },
 
   template: (self) => {
@@ -53,9 +62,9 @@ export let Mod = Shadow("mod-el", {
 let modList = (ctx) => {
   return `${Object.entries(ctx.state)
     .map(
-      (
-        x
-      ) => `<div id="${x[1].type}" class="mod" @dragstart="handleDragStart" draggable="true">
+      (x) => `<div id="${x[1].type}" class="mod" @dragstart="${checkType(
+        x[1].type
+      )}" draggable="true">
         ${x[1].name}
     </div>
   `
@@ -63,3 +72,20 @@ let modList = (ctx) => {
     .join("")}
   `;
 };
+
+function checkType(typ) {
+  var retval;
+  switch (typ) {
+    case "stmt":
+      retval = "handleDragStartStmt";
+      break;
+    case "loop":
+      retval = "handleDragStartLoop";
+      break;
+    case "func":
+      retval = "handleDragStart";
+      break;
+  }
+
+  return retval;
+}

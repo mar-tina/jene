@@ -16,6 +16,7 @@ export let FuncObject = function (id) {
   this.id = id;
   this.declarations = [];
   this.params = [];
+  this.loops = [];
   this.retval;
   this.ktype = "func";
 };
