@@ -32,6 +32,10 @@ func (s *Stack) SplitToCommands(instr string) []string {
 		ret = strings.Split(instr, ":")
 		s.HandlePkgDeclaration(ret)
 		break
+	case "imports":
+		ret = strings.Split(instr, ":")
+		s.HandleImports(ret)
+		break
 	case "declare":
 		ret = strings.Split(instr, ":")
 		s.HandleVariableDeclaration(ret)
@@ -40,6 +44,12 @@ func (s *Stack) SplitToCommands(instr string) []string {
 		ret = strings.Split(instr, ":")
 		s.HandleFunctionDeclaration(ret)
 		break
+	case "f-state":
+		ret = strings.Split(instr, ":")
+		s.HandleStatementDeclaration(ret)
+	case "set-to":
+		ret = strings.Split(instr, ":")
+		s.HandleAssign(ret)
 	case "f-end":
 		s.HandleFunctionClose()
 		break
@@ -72,6 +82,27 @@ func (s *Stack) HandleVariableDeclaration(cmd []string) {
 func (s *Stack) HandleFunctionClose() {
 	s.execFunc.End()
 	s.jene.Commit(s.execFunc)
+}
+
+func (s *Stack) HandleStatementDeclaration(cmd []string) {
+	if cmd[1] == "log" {
+		s.execFunc.State(s.jene.Log(cmd[2], cmd[3]))
+	} else {
+		s.execFunc.State(cmd[3])
+	}
+
+}
+
+func (s *Stack) HandleImports(cmd []string) {
+	for _, arg := range strings.Split(cmd[1], ",") {
+		s.jene.Use(arg)
+	}
+
+	s.jene.FlushUse()
+}
+
+func (s *Stack) HandleAssign(cmd []string) {
+	s.execFunc.StateEq(cmd[1], cmd[2])
 }
 
 func parseVar(input string) interface{} {
