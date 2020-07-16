@@ -6,6 +6,7 @@ export let pubglobalCtx = (self) => {
   let props = {
     todos: [],
     components: [],
+    currentmod: "",
   };
   return globalProvider.addNewContext("globalCtx", props);
 };
