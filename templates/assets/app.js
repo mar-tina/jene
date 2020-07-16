@@ -6,7 +6,6 @@ import "./components/header.js";
 export let App = Shadow("app-el", {
   onMount: (self) => {
     pubglobalCtx(self);
-    console.log("global provider", globalProvider);
   },
 
   template: (self) => /*html*/ `

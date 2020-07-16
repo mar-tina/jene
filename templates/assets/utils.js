@@ -72,13 +72,12 @@ export let createObjectOnCondition = (cond) => {
   return ret;
 };
 
-export let addStmtToFunctionObject = (id, items, stmt) => {
+export let addDeclarationToFunctionObject = (id, items, stmt) => {
   for (var i in items) {
     if (items[i].id == id) {
       items[i].declarations.push(Array.isArray(stmt) ? stmt[0] : stmt);
       break; //Stop this loop, we found it!
     }
-    console.log("Item", items[i].id);
   }
 };
 
@@ -88,7 +87,6 @@ export let addLoopToFunctionObject = (id, items, loop) => {
       items[i].declarations.push(loop);
       break; //Stop this loop, we found it!
     }
-    console.log("Item", items[i].id);
   }
 };
 
@@ -100,7 +98,6 @@ export let checkIfAlreadyExists = (id) => {
       component = items.splice(i, 1);
       break; //Stop this loop, we found it!
     }
-    console.log("Item", items[i].id);
   }
   return component;
 };
