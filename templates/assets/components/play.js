@@ -5,10 +5,14 @@ import {
   handleDragStartLoop,
   handleDragStartStmt,
   handleDropOnFunc,
+  matchTypeToFunctionCall,
+  checkIfExistsInFunction,
+  handleDropOnPlay,
 } from "./shared.js";
 
 let state = {
   components: [],
+  currentDragged: "",
 };
 
 export let Play = Shadow("play-el", {
@@ -20,29 +24,16 @@ export let Play = Shadow("play-el", {
   },
 
   methods: {
-    handleDrop: function (e, self) {
-      e.preventDefault();
-      let data = JSON.parse(e.dataTransfer.getData("module"));
-      self.state.components.push(createObjectOnCondition(data.name));
-      globalProvider.providers.globalCtx.proxyObject.components =
-        self.state.components;
-      console.log("Drop it", self.state, globalProvider.providers);
-    },
-
+    handleDropOnPlay,
     handleDragover: function (e, self) {
       e.preventDefault();
-      console.log("Over");
     },
-
+    hello: handleDragStartStmt,
     loopDragStart: handleDragStartLoop,
-
     stmtDragStart: handleDragStartStmt,
-
     handleDropOnFunc,
-
     handleDragStart: function (e, self) {
       e.preventDefault();
-      console.log("Drag start", e);
     },
   },
 
@@ -89,7 +80,7 @@ export let Play = Shadow("play-el", {
               background-color: yellow;
             }
         </style>
-        <div @dragover="handleDragover" @dragenter="handleDragStart" @drop="handleDrop" class="container"> 
+        <div @dragover="handleDragover" @dragenter="handleDragStart" @drop="handleDropOnPlay" class="container"> 
             ${componentList(self)}
         </div>
     `,
@@ -103,15 +94,17 @@ let componentList = (ctx) => {
         if (x.getTypeOf() == "func") {
           return `<div id=${
             x.id
-          } class="${x.getTypeOf()}" @drop="handleDropOnFunc" @click="hi" draggable="true">
+          } class="${x.getTypeOf()}" @drop="handleDropOnFunc" @dragstart="handleDragStartInFunc"  draggable="true">
             ${x.id}${ctx.state.components.length}${x.name}
             ${
               x.declarations &&
               x.declarations
                 .map((x) => {
-                  return `<div class="${
-                    Array.isArray(x) ? x[0].getTypeOf() : x.getTypeOf()
-                  }"> ${x.id} </div>`;
+                  return `<div id="${
+                    x.id
+                  }" class="${x.getTypeOf()}" @click="hi" draggable="true" @dragstart="${matchTypeToFunctionCall(
+                    x.getTypeOf()
+                  )}" > ${x.id} </div>`;
                 })
                 .join("")
             }
@@ -120,9 +113,9 @@ let componentList = (ctx) => {
         } else {
           return `<div id=${
             x.id
-          } class="${x.getTypeOf()}" draggable="true" @dragstart="${
-            x.getTypeOf() == `loop` ? `loopDragStart` : `stmtDragStart`
-          }"  >
+          } class="${x.getTypeOf()}" draggable="true" @dragstart="${matchTypeToFunctionCall(
+            x.getTypeOf()
+          )}"  >
             ${x.id}${ctx.state.components.length}
           </div>`;
         }
