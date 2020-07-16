@@ -1,6 +1,6 @@
 # jene
 
-A very simple experimental code gen tool
+A very simple experimental code gen tool.
 
 ### To Run the App
 
