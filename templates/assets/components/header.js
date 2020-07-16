@@ -15,7 +15,7 @@ export let Header = Shadow("header-el", {
         font-weight: 600;
         flex-direction: row;
         justify-content: space-between;
-        background-color: lightgreen;
+        border-bottom: 1px #333333 solid;
       }
 
       .menu {
