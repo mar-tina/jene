@@ -50,6 +50,13 @@ func (s *Stack) SplitToCommands(instr string) []string {
 	case "set-to":
 		ret = strings.Split(instr, ":")
 		s.HandleAssign(ret)
+	case "l-start":
+		ret = strings.Split(instr, ":")
+		s.HandleLoopDeclaration(ret)
+		break
+	case "l-end":
+		s.HandleLoopClose()
+		break
 	case "f-end":
 		s.HandleFunctionClose()
 		break
@@ -90,7 +97,6 @@ func (s *Stack) HandleStatementDeclaration(cmd []string) {
 	} else {
 		s.execFunc.State(cmd[3])
 	}
-
 }
 
 func (s *Stack) HandleImports(cmd []string) {
@@ -105,6 +111,14 @@ func (s *Stack) HandleAssign(cmd []string) {
 	s.execFunc.StateEq(cmd[1], cmd[2])
 }
 
+func (s *Stack) HandleLoopDeclaration(cmd []string) {
+	s.execFunc.LRange(cmd[1], cmd[2], cmd[3])
+}
+
+func (s *Stack) HandleLoopClose() {
+	s.execFunc.EndLRange()
+}
+
 func parseVar(input string) interface{} {
 	var ret interface{}
 	sp := strings.Split(input, "*")
@@ -114,18 +128,17 @@ func parseVar(input string) interface{} {
 
 	switch sp[0] {
 	case "i":
-		log.Printf("Inside int")
-		temp, _ := strconv.Atoi(sp[1])
-		return temp
+		ret, _ = strconv.Atoi(sp[1])
+		break
 	case "i64":
 		ret, _ = strconv.ParseInt(sp[1], 10, 64)
-		return ret
+		break
 	case "c":
 		ret, _ = strconv.ParseBool(sp[1])
-		return ret
+		break
 	default:
 		ret = sp[1]
-		return ret
+		break
 	}
 
 	return ret
