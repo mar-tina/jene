@@ -24,14 +24,32 @@ export let Dash = Shadow("dash-el", {
         margin: 10px;
         grid-template-columns: 1fr 2fr 1fr;
         grid-gap: 20px;
+      } 
+      #search {
+        font-family: "Courier New", Courier, monospace;
+        font-weight: 600; 
+      }
+      #wd {
+        font-family: "Courier New", Courier, monospace;
+        font-weight: 600; 
+      }
+      #side-content {
+        font-family: "Courier New", Courier, monospace;
+        font-weight: 600;
       }
     </style>
     <div class="container">
       <div>
+        <p id="search"> Search Modules </p>
         <modules-el></modules-el>
       </div>
-      <div> <play-el></play-el> </div>
-      <div>  </div>
+      <div> 
+        <p id="wd"> Working Directory: gen/main.go </p>
+        <play-el></play-el>
+      </div>
+      <div>
+        <p id="side-content"> Content and Variables </p>
+      </div>
     </div>
   `,
 });

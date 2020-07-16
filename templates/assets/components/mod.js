@@ -36,7 +36,6 @@ export let Mod = Shadow("mod-el", {
         id: e.target.id,
       };
       e.dataTransfer.setData("module", JSON.stringify(item));
-      console.log("is a drag", e.target.id);
     },
 
     handleDragStartStmt: handleDragStartStmt,
