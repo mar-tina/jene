@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"log"
 	"strconv"
 	"strings"
 
@@ -12,10 +11,16 @@ type Stack struct {
 	instructions []string
 	jene         *JeneBuilder
 	execFunc     *Function
+	Options      map[string]func(params []string)
+	CloseOptions map[string]func()
 }
 
 func (s *Stack) InitStack(vals []string) {
 	s.instructions = vals
+	s.Options = make(map[string]func(params []string))
+	s.CloseOptions = make(map[string]func())
+	s.CreateOptions()
+	s.CreateCloseOptions()
 }
 
 func (s *Stack) ExecuteInstructions() {
@@ -24,46 +29,16 @@ func (s *Stack) ExecuteInstructions() {
 	}
 }
 
-func (s *Stack) SplitToCommands(instr string) []string {
-	condition := strings.Split(instr, ":")[0]
-	var ret []string
-	switch condition {
-	case "pkg":
-		ret = strings.Split(instr, ":")
-		s.HandlePkgDeclaration(ret)
-		break
-	case "imports":
-		ret = strings.Split(instr, ":")
-		s.HandleImports(ret)
-		break
-	case "declare":
-		ret = strings.Split(instr, ":")
-		s.HandleVariableDeclaration(ret)
-		break
-	case "f-start":
-		ret = strings.Split(instr, ":")
-		s.HandleFunctionDeclaration(ret)
-		break
-	case "f-state":
-		ret = strings.Split(instr, ":")
-		s.HandleStatementDeclaration(ret)
-	case "set-to":
-		ret = strings.Split(instr, ":")
-		s.HandleAssign(ret)
-	case "l-start":
-		ret = strings.Split(instr, ":")
-		s.HandleLoopDeclaration(ret)
-		break
-	case "l-end":
-		s.HandleLoopClose()
-		break
-	case "f-end":
-		s.HandleFunctionClose()
-		break
-	default:
-		log.Printf("Did not match any")
+func (s *Stack) SplitToCommands(instr string) {
+	condition := strings.Split(instr, ":")
+
+	if val, ok := s.CloseOptions[condition[0]]; ok {
+		val()
+	} else {
+		f := s.CallOption(condition)
+		f()
 	}
-	return ret
+
 }
 
 func (s *Stack) HandlePkgDeclaration(cmd []string) {
@@ -142,4 +117,31 @@ func parseVar(input string) interface{} {
 	}
 
 	return ret
+}
+
+func (s *Stack) CreateOptions() {
+	s.Options["f-state"] = s.HandleStatementDeclaration
+	s.Options["f-start"] = s.HandleFunctionDeclaration
+	s.Options["l-start"] = s.HandleLoopDeclaration
+	s.Options["set-to"] = s.HandleAssign
+	s.Options["declare"] = s.HandleVariableDeclaration
+	s.Options["imports"] = s.HandleImports
+	s.Options["pkg"] = s.HandlePkgDeclaration
+}
+
+func (s *Stack) CreateCloseOptions() {
+	s.CloseOptions["f-end"] = s.HandleFunctionClose
+	s.CloseOptions["l-end"] = s.HandleLoopClose
+}
+
+func (s *Stack) CallOption(opt []string) func() {
+	return func() {
+		s.Options[opt[0]](opt)
+	}
+}
+
+func (s *Stack) CallCloseOption(opt []string) func() {
+	return func() {
+		s.CloseOptions[opt[0]]()
+	}
 }
