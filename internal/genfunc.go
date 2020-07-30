@@ -35,7 +35,6 @@ func NewFunc(name, retval string, params *orderedmap.OrderedMap) *Function {
 	}
 
 	f.parseString = fmt.Sprintf("func %v(%v) %v {\n", name, vals, retval)
-
 	return f
 }
 
@@ -109,8 +108,7 @@ func (f *Function) StateEq(a, b string) {
 	}
 }
 
-// LRange creates a range loop. It's declared as a method because loops
-// can only be declared in a function
+// LRange creates a range loop. 
 func (f *Function) LRange(idx, arg string, param interface{}) {
 	f.block = true
 	tab := fmt.Sprintf(strings.Repeat("\t", f.tabDepth))

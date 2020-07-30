@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"log"
 	"strconv"
 	"strings"
 
@@ -94,6 +95,17 @@ func (s *Stack) HandleLoopClose() {
 	s.execFunc.EndLRange()
 }
 
+func (s *Stack) HandleFunctionCall(cmd []string) {
+
+	fparams := orderedmap.NewOrderedMap()
+	for _, arg := range strings.Split(cmd[2], "*") {
+		spl := strings.Split(arg, ",")
+		log.Printf("THE COMMANDS %v", spl)
+		fparams.Set(spl[0], spl[1])
+	}
+	s.execFunc.Call(cmd[1], fparams)
+}
+
 func parseVar(input string) interface{} {
 	var ret interface{}
 	sp := strings.Split(input, "*")
@@ -121,6 +133,7 @@ func parseVar(input string) interface{} {
 
 func (s *Stack) CreateOptions() {
 	s.Options["f-state"] = s.HandleStatementDeclaration
+	s.Options["f-call"] = s.HandleFunctionCall
 	s.Options["f-start"] = s.HandleFunctionDeclaration
 	s.Options["l-start"] = s.HandleLoopDeclaration
 	s.Options["set-to"] = s.HandleAssign
