@@ -108,7 +108,7 @@ func (f *Function) StateEq(a, b string) {
 	}
 }
 
-// LRange creates a range loop. 
+// LRange creates a range loop.
 func (f *Function) LRange(idx, arg string, param interface{}) {
 	f.block = true
 	tab := fmt.Sprintf(strings.Repeat("\t", f.tabDepth))
@@ -124,7 +124,7 @@ func (f *Function) EndLRange() {
 	f.block = false
 }
 
-func parseParams(params *orderedmap.OrderedMap) string {
+func (f *Function) parseParams(params *orderedmap.OrderedMap) string {
 	var parseString string
 	sep := ","
 	counter := 0
@@ -137,7 +137,11 @@ func parseParams(params *orderedmap.OrderedMap) string {
 		case int:
 			parseString += fmt.Sprintf(`%v%s`, el.Value, sep)
 		case string:
-			parseString += fmt.Sprintf(`"%v"%s`, el.Value, sep)
+			if f.existsInDeclared(el.Value.(string)) {
+				parseString += fmt.Sprintf(`%v%s`, el.Value, sep)
+			} else {
+				parseString += fmt.Sprintf(`"%v"%s`, el.Value, sep)
+			}
 		}
 
 		counter++
@@ -146,15 +150,27 @@ func parseParams(params *orderedmap.OrderedMap) string {
 	return parseString
 }
 
+func (f *Function) existsInDeclared(param string) bool {
+	exists := false
+	for _, val := range f.declared {
+		if val == param {
+			exists = true
+			break
+		}
+	}
+
+	return exists
+}
+
 func (f *Function) Call(idx string, params *orderedmap.OrderedMap) {
-	parsedParams := parseParams(params)
+	parsedParams := f.parseParams(params)
 	parseString := fmt.Sprintf(`%s(%v)`, idx, parsedParams)
 	f.State(parseString)
 }
 
 //Rcall calls the function that has a return value
 func (f *Function) RCall(idx string, retvals []string, params *orderedmap.OrderedMap, defined bool) {
-	parsedParams := parseParams(params)
+	parsedParams := f.parseParams(params)
 	ret := ""
 	sep := ","
 	for i, arg := range retvals {
